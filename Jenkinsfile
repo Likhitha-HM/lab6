@@ -7,12 +7,11 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                git branch: 'main', url:'https://github.com/Likhitha-HM/lab6.git',
-            
-                credentialsId: 'github-token'
+                git branch: 'main', 
+                    url: 'https://github.com/Likhitha-HM/lab6.git',
+                    credentialsId: 'github-token'
             }
         }
 
@@ -33,15 +32,15 @@ pipeline {
                 sh 'mvn package'
             }
         }
-         stage('Run Application') {
+
+        stage('Run Application') {
             steps {
                 sh 'mvn exec:java -Dexec.mainClass="com.example.app.App"'
             }
         }
-    }
-}
-    post {
+    } // End of Stages
 
+    post {
         success {
             emailext (
                 subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
@@ -57,5 +56,5 @@ pipeline {
                 to: "likhithahm953@gmail.com"
             )
         }
-    }
-}
+    } // End of Post
+} // End of Pipeline
