@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'
-        jdk 'JDK21'
+        maven 'Maven8'      // Use the name configured in your Jenkins
+        jdk 'JDK21'        // Make sure this matches your JDK installation name
     }
 
     stages {
@@ -35,10 +35,13 @@ pipeline {
 
         stage('Run Application') {
             steps {
-                sh 'mvn exec:java -Dexec.mainClass="com.example.app.App"'
+                // Run in background so pipeline doesn't hang
+                sh 'mvn exec:java -Dexec.mainClass="com.example.app.App" > app.log 2>&1 &'
+                sh 'sleep 5'  // Give it time to start
+                sh 'echo "Application started in background. Check app.log for output."'
             }
         }
-    } // End of Stages
+    }
 
     post {
         success {
@@ -56,5 +59,5 @@ pipeline {
                 to: "likhithahm953@gmail.com"
             )
         }
-    } // End of Post
-} // End of Pipeline
+    }
+}
